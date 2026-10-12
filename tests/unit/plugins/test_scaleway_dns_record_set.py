@@ -286,7 +286,7 @@ def test_listing_uses_all_pages_and_filters_exact_name_and_type():
     kwargs = api.list_dns_zone_records_all.call_args.kwargs
     assert kwargs["dns_zone"] == "example.com"
     assert kwargs["name"] == "www"
-    assert str(kwargs["type_"]).split(".")[-1] == "A"
+    assert str(kwargs["type_"]).rsplit(".", maxsplit=1)[-1] == "A"
     assert kwargs["project_id"] == "project-id"
 
 

@@ -134,7 +134,7 @@ def resource_params(state="present", *, project_id="project-1"):
 
 
 def test_existing_zone_is_idempotent():
-    result, api, _ = run(scaleway_dns_zone, resource_params(), [zone()])
+    result, api, _client = run(scaleway_dns_zone, resource_params(), [zone()])
 
     assert isinstance(result, Exited)
     assert result.result["changed"] is False
@@ -144,7 +144,7 @@ def test_existing_zone_is_idempotent():
 
 
 def test_present_creates_only_missing_exact_zone():
-    result, api, _ = run(
+    result, api, _client = run(
         scaleway_dns_zone,
         resource_params(),
         [zone(subdomain="other"), zone(project_id="project-2")],
@@ -159,7 +159,7 @@ def test_present_creates_only_missing_exact_zone():
 
 
 def test_absent_deletes_only_exact_zone_with_project_id():
-    result, api, _ = run(
+    result, api, _client = run(
         scaleway_dns_zone,
         resource_params("absent"),
         [zone(), zone(project_id="project-2")],
@@ -174,7 +174,7 @@ def test_absent_deletes_only_exact_zone_with_project_id():
 
 
 def test_absent_is_idempotent_when_zone_does_not_exist():
-    result, api, _ = run(
+    result, api, _client = run(
         scaleway_dns_zone, resource_params("absent"), [zone(subdomain="other")]
     )
 
@@ -186,7 +186,7 @@ def test_absent_is_idempotent_when_zone_does_not_exist():
 def test_rename_existing_subdomain_uses_update_api():
     params = resource_params()
     params["current_subdomain"] = "old"
-    result, api, _ = run(
+    result, api, _client = run(
         scaleway_dns_zone,
         params,
         [zone(subdomain="old")],
@@ -203,7 +203,7 @@ def test_rename_existing_subdomain_uses_update_api():
 def test_rename_fails_when_source_and_target_both_exist():
     params = resource_params()
     params["current_subdomain"] = "old"
-    result, api, _ = run(
+    result, api, _client = run(
         scaleway_dns_zone,
         params,
         [zone(subdomain="old"), zone()],
@@ -217,7 +217,7 @@ def test_rename_fails_when_source_and_target_both_exist():
 def test_rename_does_not_create_zone_when_source_is_missing():
     params = resource_params()
     params["current_subdomain"] = "old"
-    result, api, _ = run(scaleway_dns_zone, params, [])
+    result, api, _client = run(scaleway_dns_zone, params, [])
 
     assert isinstance(result, Failed)
     assert "Source DNS zone does not exist" in result.result["msg"]
@@ -227,7 +227,7 @@ def test_rename_does_not_create_zone_when_source_is_missing():
 def test_root_zone_deletion_is_rejected_before_api_call():
     params = resource_params("absent")
     params["subdomain"] = ""
-    result, api, _ = run(scaleway_dns_zone, params, [zone(subdomain="")])
+    result, api, _client = run(scaleway_dns_zone, params, [zone(subdomain="")])
 
     assert isinstance(result, Failed)
     assert "root DNS zone" in result.result["msg"]
@@ -236,7 +236,7 @@ def test_root_zone_deletion_is_rejected_before_api_call():
 
 @pytest.mark.parametrize("state,zones", [("present", []), ("absent", [zone()])])
 def test_check_mode_reports_change_without_writing(state, zones):
-    result, api, _ = run(
+    result, api, _client = run(
         scaleway_dns_zone, resource_params(state), zones, check_mode=True
     )
 
@@ -251,7 +251,7 @@ def test_check_mode_reports_change_without_writing(state, zones):
 
 
 def test_zone_mutation_requires_project_id():
-    result, api, _ = run(
+    result, api, _client = run(
         scaleway_dns_zone,
         resource_params(project_id=None),
         [],
@@ -264,7 +264,7 @@ def test_zone_mutation_requires_project_id():
 
 
 def test_zone_info_reads_exact_zone_without_writing():
-    result, api, _ = run(
+    result, api, _client = run(
         scaleway_dns_zone_info,
         {"domain": "example.com", "subdomain": "test", "project_id": "project-1"},
         [zone(), zone(subdomain="other")],
@@ -277,7 +277,7 @@ def test_zone_info_reads_exact_zone_without_writing():
 
 
 def test_zone_info_fails_on_missing_zone():
-    result, _, _ = run(
+    result, _api, _client = run(
         scaleway_dns_zone_info,
         {"domain": "example.com", "subdomain": "test", "project_id": "project-1"},
         [],
@@ -364,7 +364,7 @@ def test_multiple_projects_and_domains_issue_all_requests():
 
 
 def test_rfc3339_date_filters_are_passed_to_sdk():
-    result, api, _ = run(
+    result, api, _client = run(
         scaleway_dns_zones_info,
         list_params(created_after="2026-10-08T09:00:00Z"),
         [],
@@ -387,7 +387,7 @@ def test_rfc3339_date_filters_are_passed_to_sdk():
     ],
 )
 def test_invalid_list_filter_fails_before_api_call(changes, expected):
-    result, api, _ = run(scaleway_dns_zones_info, list_params(**changes), [])
+    result, api, _client = run(scaleway_dns_zones_info, list_params(**changes), [])
 
     assert isinstance(result, Failed)
     assert expected in result.result["msg"]

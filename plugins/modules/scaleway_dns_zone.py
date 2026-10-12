@@ -19,7 +19,7 @@ description:
   - Deleting a zone also deletes all DNS records in that zone.
 version_added: "2.8.0"
 author:
-  - Scaleway Ansible contributors
+  - Nikolay Savchenko (@3mg)
 extends_documentation_fragment:
   - scaleway.scaleway.scaleway
 requirements:

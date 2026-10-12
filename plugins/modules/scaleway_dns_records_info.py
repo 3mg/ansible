@@ -20,7 +20,7 @@ description:
   - The module reads every page of zone and record results and never changes records.
 version_added: "2.8.0"
 author:
-  - Scaleway Ansible contributors
+  - Nikolay Savchenko (@3mg)
 extends_documentation_fragment:
   - scaleway.scaleway.scaleway
 requirements:

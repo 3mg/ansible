@@ -18,7 +18,7 @@ description:
   - The module reads all result pages and fails if a value-based query is ambiguous.
 version_added: "2.8.0"
 author:
-  - Scaleway Ansible contributors
+  - Nikolay Savchenko (@3mg)
 extends_documentation_fragment:
   - scaleway.scaleway.scaleway
 requirements:

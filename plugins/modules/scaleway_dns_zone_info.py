@@ -18,7 +18,7 @@ description:
   - Fail if the zone does not exist or if multiple Projects contain a matching zone.
 version_added: "2.8.0"
 author:
-  - Scaleway Ansible contributors
+  - Nikolay Savchenko (@3mg)
 extends_documentation_fragment:
   - scaleway.scaleway.scaleway
 requirements:

@@ -22,7 +22,7 @@ description:
   - Unlike the Terraform resource, this module requires an existing zone by default.
 version_added: "2.8.0"
 author:
-  - Scaleway Ansible contributors
+  - Nikolay Savchenko (@3mg)
 extends_documentation_fragment:
   - scaleway.scaleway.scaleway
 requirements:
@@ -550,7 +550,7 @@ def run_module(module):
                 changes=[change],
                 disallow_new_zone_creation=not params["create_zone"],
             )
-            if params["state"] == "present" and selected is None:
+            if after is not None and selected is None:
                 refreshed = _list_records(api, params)
                 candidates = [
                     record

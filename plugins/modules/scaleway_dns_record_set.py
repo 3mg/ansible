@@ -20,7 +20,7 @@ description:
     geo-IP, HTTP service, weighted, or view configurations.
 version_added: "2.8.0"
 author:
-  - Scaleway Ansible contributors
+  - Nikolay Savchenko (@3mg)
 extends_documentation_fragment:
   - scaleway.scaleway.scaleway
 requirements:
